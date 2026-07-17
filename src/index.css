@@ -914,3 +914,150 @@ model-viewer {
 .tab-image-header:hover img {
   transform: scale(1.04);
 }
+
+/* --- MOBILE & AR FLOOR OPTIMIZATIONS --- */
+
+/* AR scan prompt guide */
+#ar-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  background: rgba(18, 14, 22, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 100px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  animation: fadeIn 0.3s ease;
+}
+
+#ar-prompt img {
+  width: 30px;
+  height: 30px;
+  animation: ar-hand-wave 2s ease-in-out infinite;
+  filter: sepia(1) saturate(5) hue-rotate(15deg);
+}
+
+#ar-prompt::after {
+  content: "Scan room to find floor";
+  color: var(--color-secondary);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@keyframes ar-hand-wave {
+  0%, 100% { transform: translateX(-8px) rotate(-10deg); }
+  50% { transform: translateX(8px) rotate(10deg); }
+}
+
+/* Custom styles for hidden AR prompt during placement */
+model-viewer:not([ar-status="session-started"]) #ar-prompt {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 20px 16px;
+    gap: 20px;
+  }
+  .app-header h1 {
+    font-size: 2.4rem;
+  }
+  .app-header p {
+    font-size: 1rem;
+  }
+  .viewer-wrapper {
+    height: 450px;
+  }
+  .gallery-section {
+    padding: 24px 16px;
+    gap: 24px;
+  }
+  .gallery-header h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.9rem;
+    letter-spacing: 1px;
+  }
+  .app-header p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  .experience-selector {
+    gap: 6px;
+    padding: 4px;
+  }
+  .selector-btn {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  .selector-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  .viewer-wrapper {
+    height: 380px;
+  }
+  .ar-cta-button {
+    top: 12px;
+    right: 12px;
+    padding: 8px 14px;
+    font-size: 0.78rem;
+    gap: 6px;
+  }
+  .viewer-controls {
+    bottom: 12px;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .control-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .control-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .audio-card {
+    padding: 12px 14px;
+  }
+  .audio-meta h4 {
+    font-size: 0.88rem;
+  }
+  .audio-meta p {
+    font-size: 0.72rem;
+  }
+  .play-toggle-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .sidebar-panel {
+    height: 480px;
+  }
+  .panel-body {
+    padding: 20px 16px;
+  }
+  .tab-trigger {
+    padding: 12px 4px;
+    font-size: 0.82rem;
+    min-width: 70px;
+  }
+  .chariot-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

@@ -270,13 +270,20 @@ export default function App() {
             ar
             ar-modes="webxr scene-viewer quick-look"
             ar-placement="floor"
-            ar-scale="fixed"
+            ar-scale="auto"
+            bounds="tight"
             camera-controls
             auto-rotate={autoRotate ? "" : undefined}
-            shadow-intensity={shadows ? "1" : "0"}
+            shadow-intensity={shadows ? "1.5" : "0"}
+            shadow-softness={shadows ? "0.5" : "0"}
             exposure="1"
             alt={selectedModel === 'yatra' ? '3D Model of the Jagannath Rath Yatra Chariot' : '3D Model of the Jagannath Puri Temple'}
           >
+            {/* Built-in AR scan prompt overlay */}
+            <div slot="ar-prompt" id="ar-prompt">
+              <img src="https://modelviewer.dev/shared/assets/hand.png" alt="Scan floor instruction" />
+            </div>
+
             {/* Custom 3D Overlay Controls */}
             <div className="viewer-controls">
               <button 
