@@ -666,7 +666,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="app-footer">
-        <p>© 2026 Jagannath Rath Yatra Immersive Experience. Developed with Vite + React + Model-Viewer.</p>
+        <p>© 2026 Jagannath Rath Yatra Immersive Experience. Made with love and devotion.</p>
       </footer>
 
       {/* Lightbox Modal */}
