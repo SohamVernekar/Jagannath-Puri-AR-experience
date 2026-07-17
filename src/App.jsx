@@ -15,6 +15,72 @@ import {
   Sparkles
 } from 'lucide-react';
 
+const NeelachakraIcon = ({ className, size = 48 }) => (
+  <svg className={className} width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Outer ring */}
+    <circle cx="50" cy="50" r="43" stroke="var(--color-secondary)" strokeWidth="3" fill="none" />
+    <circle cx="50" cy="50" r="39" stroke="var(--color-secondary)" strokeWidth="1" strokeDasharray="3 2" fill="none" />
+    
+    {/* Inner ring */}
+    <circle cx="50" cy="50" r="18" stroke="var(--color-secondary)" strokeWidth="2" fill="none" />
+    <circle cx="50" cy="50" r="14" stroke="var(--color-secondary)" strokeWidth="1" strokeDasharray="2 1" fill="none" />
+    
+    {/* Hub */}
+    <circle cx="50" cy="50" r="6" fill="var(--color-secondary)" />
+    
+    {/* Outer teeth/flames */}
+    {[...Array(16)].map((_, i) => {
+      const angle = (i * 360) / 16;
+      return (
+        <path
+          key={`tooth-${i}`}
+          d="M 50 1 L 46 7 L 54 7 Z"
+          fill="var(--color-secondary)"
+          transform={`rotate(${angle} 50 50)`}
+        />
+      );
+    })}
+    
+    {/* Spokes */}
+    {[...Array(8)].map((_, i) => {
+      const angle = (i * 360) / 8;
+      return (
+        <line
+          key={`spoke-${i}`}
+          x1="50" y1="50" x2="50" y2="7"
+          stroke="var(--color-secondary)"
+          strokeWidth="2"
+          transform={`rotate(${angle} 50 50)`}
+        />
+      );
+    })}
+  </svg>
+);
+
+const JagannathWatermark = () => (
+  <div className="watermark-container">
+    <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Left Eye */}
+      <circle cx="120" cy="100" r="50" stroke="var(--color-secondary)" strokeWidth="2" strokeDasharray="5 5" opacity="0.2" />
+      <circle cx="120" cy="100" r="40" stroke="var(--color-secondary)" strokeWidth="1.5" opacity="0.3" />
+      <circle cx="120" cy="100" r="18" fill="var(--color-secondary)" opacity="0.25" />
+      
+      {/* Right Eye */}
+      <circle cx="280" cy="100" r="50" stroke="var(--color-secondary)" strokeWidth="2" strokeDasharray="5 5" opacity="0.2" />
+      <circle cx="280" cy="100" r="40" stroke="var(--color-secondary)" strokeWidth="1.5" opacity="0.3" />
+      <circle cx="280" cy="100" r="18" fill="var(--color-secondary)" opacity="0.25" />
+      
+      {/* Tilak (U-shaped mark in between) */}
+      <path d="M 185 60 C 185 130, 215 130, 215 60" stroke="var(--color-secondary)" strokeWidth="2.5" fill="none" opacity="0.3" />
+      <path d="M 200 40 L 200 135" stroke="var(--color-secondary)" strokeWidth="2" opacity="0.3" />
+      <circle cx="200" cy="135" r="4" fill="var(--color-secondary)" opacity="0.3" />
+      
+      {/* Sacred Smile */}
+      <path d="M 160 160 Q 200 180 240 160" stroke="var(--color-primary)" strokeWidth="2" fill="none" opacity="0.3" />
+    </svg>
+  </div>
+);
+
 export default function App() {
   const [selectedModel, setSelectedModel] = useState('yatra');
   const [activeTab, setActiveTab] = useState('overview');
@@ -24,6 +90,11 @@ export default function App() {
   const [shadows, setShadows] = useState(true);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  
+  // New landing page and model preload states
+  const [showLanding, setShowLanding] = useState(true);
+  const [isDoorOpening, setIsDoorOpening] = useState(false);
+  const [initialModelLoaded, setInitialModelLoaded] = useState(false);
   
   const modelViewerRef = useRef(null);
   const audioRef = useRef(null);
@@ -92,6 +163,7 @@ export default function App() {
         // Add a slight delay for smooth transition
         setTimeout(() => {
           setIsLoading(false);
+          setInitialModelLoaded(true);
         }, 500);
       }
     };
@@ -143,16 +215,34 @@ export default function App() {
     };
   }, []);
 
-  // Hook to automatically play flute music once the 3D model loads fully
+  // Hook to automatically play flute music once the 3D model loads fully (and landing page is dismissed)
   useEffect(() => {
-    if (!isLoading && audioRef.current) {
+    if (!isLoading && !showLanding && audioRef.current) {
       audioRef.current.play().then(() => {
         setIsPlayingAudio(true);
       }).catch(err => {
         console.log("Audio auto-play failed/blocked by browser policy:", err);
       });
     }
-  }, [isLoading]);
+  }, [isLoading, showLanding]);
+
+  const handleBeginDarshan = () => {
+    setIsDoorOpening(true);
+    
+    // Play audio immediately on user click to satisfy browser policy
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlayingAudio(true);
+      }).catch(err => {
+        console.log("Flute audio play failed on entry: ", err);
+      });
+    }
+    
+    // Transition timing matching door rotation CSS animation (1.8s)
+    setTimeout(() => {
+      setShowLanding(false);
+    }, 1800);
+  };
 
   // Controls functions
   const handleModelChange = (model) => {
@@ -200,26 +290,108 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Audio element for devotional flute instrumental */}
-      <audio 
-        ref={audioRef} 
-        src="flute.mp3" 
-        loop
-      />
-      {/* Audio element for crowd ambient sound in AR */}
-      <audio 
-        ref={crowdAudioRef} 
-        src="crowd.mp3" 
-        loop
-      />
+    <>
+      {showLanding && (
+        <div className={`landing-overlay ${isDoorOpening ? 'door-opening' : ''}`}>
+          <div className="landing-bg-glow"></div>
+          
+          <div className="temple-gate">
+            {/* Left Door Half */}
+            <div className={`temple-door door-left ${isDoorOpening ? 'open' : ''}`}>
+              <div className="door-panel">
+                <div className="door-frame"></div>
+                <div className="door-carving">
+                  <div className="carving-circle"></div>
+                  <div className="carving-pattern"></div>
+                </div>
+                <div className="door-knocker left-knocker">
+                  <div className="knocker-ring"></div>
+                </div>
+              </div>
+            </div>
 
-      {/* Header */}
-      <header className="app-header">
-        <h1>JAGANNATH PURI EXPERIENCE</h1>
-        <p>A beautiful 3D & AR view of the Sacred Temple and Chariot Festival</p>
-        <div className="header-accent-line"></div>
-      </header>
+            {/* Right Door Half */}
+            <div className={`temple-door door-right ${isDoorOpening ? 'open' : ''}`}>
+              <div className="door-panel">
+                <div className="door-frame"></div>
+                <div className="door-carving">
+                  <div className="carving-circle"></div>
+                  <div className="carving-pattern"></div>
+                </div>
+                <div className="door-knocker right-knocker">
+                  <div className="knocker-ring"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Foreground content */}
+          <div className={`landing-content ${isDoorOpening ? 'fade-out' : ''}`}>
+            <NeelachakraIcon className="landing-chakra-logo spinning-logo" size={90} />
+            
+            <div className="greeting-text">
+              <h1 className="radhe-radhe-title">राधे राधे</h1>
+              <p className="radhe-radhe-subtitle">Radhe Radhe</p>
+              <div className="spiritual-divider">
+                <span>ॐ</span>
+              </div>
+              <h2 className="landing-title">JAGANNATH PURI EXPERIENCE</h2>
+              <p className="landing-description">
+                Immerse yourself in the sacred history, detailed architecture, and mystical realms of the divine Puri temple and Rath Yatra.
+              </p>
+            </div>
+
+            <div className="landing-action-container">
+              {!initialModelLoaded ? (
+                <div className="landing-loader-wrapper">
+                  <div className="custom-glowing-spinner"></div>
+                  <p className="loading-status-text">Preparing Divine Darshan... {loadPercentage}%</p>
+                  <div className="loading-progress-bar">
+                    <div className="loading-progress-fill" style={{ width: `${loadPercentage}%` }}></div>
+                  </div>
+                </div>
+              ) : (
+                <button className="enter-temple-btn" onClick={handleBeginDarshan}>
+                  <Sparkles size={18} className="cta-icon-sparkle" />
+                  <span>ENTER IMMERSIVE DARSHAN</span>
+                  <Sparkles size={18} className="cta-icon-sparkle" />
+                </button>
+              )}
+            </div>
+            
+            <div className="landing-footer">
+              <p>|| जय जगन्नाथ || Jai Jagannath ||</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="app-container">
+        <JagannathWatermark />
+        
+        {/* Audio element for devotional flute instrumental */}
+        <audio 
+          ref={audioRef} 
+          src="flute.mp3" 
+          loop
+        />
+        {/* Audio element for crowd ambient sound in AR */}
+        <audio 
+          ref={crowdAudioRef} 
+          src="crowd.mp3" 
+          loop
+        />
+
+        {/* Header */}
+        <header className="app-header">
+          <div className="header-title-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'center' }}>
+            <NeelachakraIcon className="neelachakra-header-icon left" size={40} />
+            <h1>JAGANNATH PURI EXPERIENCE</h1>
+            <NeelachakraIcon className="neelachakra-header-icon right" size={40} />
+          </div>
+          <p>A beautiful 3D & AR view of the Sacred Temple and Chariot Festival</p>
+          <div className="header-accent-line"></div>
+        </header>
 
       {/* Experience Switcher */}
       <div className="experience-selector">
@@ -683,5 +855,6 @@ export default function App() {
         </div>
       )}
     </div>
+    </>
   );
 }

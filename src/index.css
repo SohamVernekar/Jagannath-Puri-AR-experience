@@ -1061,3 +1061,494 @@ model-viewer:not([ar-status="session-started"]) #ar-prompt {
     gap: 8px;
   }
 }
+
+/* --- TEMPLE LANDING PAGE & DOOR ANIMATIONS --- */
+.landing-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, #170d0a 0%, #060407 100%);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: opacity 1s ease;
+}
+
+.landing-overlay.door-opening {
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(23, 13, 10, 0) 0%, rgba(6, 4, 7, 0) 100%);
+  transition: background 1.5s ease;
+}
+
+.landing-bg-glow {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.15) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(40px);
+  animation: landing-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes landing-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Temple Gate Frame & 3D Doors */
+.temple-gate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 2;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+.temple-door {
+  flex: 1;
+  height: 100%;
+  background: #1c0d08;
+  position: relative;
+  transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
+  box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.door-left {
+  transform-origin: left center;
+  border-right: 2px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(to right, #120805, #22100a 60%, #1a0b07);
+}
+
+.door-right {
+  transform-origin: right center;
+  border-left: 2px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(to left, #120805, #22100a 60%, #1a0b07);
+}
+
+/* Door opening rotation state */
+.door-left.open {
+  transform: rotateY(-110deg);
+}
+
+.door-right.open {
+  transform: rotateY(110deg);
+}
+
+.door-panel {
+  position: absolute;
+  top: 4%;
+  bottom: 4%;
+  left: 8%;
+  right: 8%;
+  border: 3px double rgba(212, 175, 55, 0.35);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.02));
+}
+
+.door-left .door-panel {
+  margin-right: 4px;
+}
+
+.door-right .door-panel {
+  margin-left: 4px;
+}
+
+/* Wood frame moldings and borders */
+.door-frame {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* Traditional circular carving pattern */
+.door-carving {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+  background: rgba(18, 8, 5, 0.8);
+}
+
+.carving-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.2);
+}
+
+.carving-pattern {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L55 35 L90 50 L55 65 L50 100 L45 65 L10 50 L45 35 Z' fill='%23d4af37' fill-opacity='0.25'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Brass Ring Knockers */
+.door-knocker {
+  position: absolute;
+  bottom: 25%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, #e6c229 0%, #8c6d00 100%);
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.left-knocker {
+  right: 15px;
+}
+
+.right-knocker {
+  left: 15px;
+}
+
+.knocker-ring {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 6px solid #b38b00;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  transform: translateY(12px);
+}
+
+/* Foreground greetings content */
+.landing-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10010;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  max-width: 620px;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.landing-content.fade-out {
+  opacity: 0;
+  transform: translate(-50%, -46%) scale(0.92);
+  pointer-events: none;
+}
+
+.landing-chakra-logo {
+  filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.45));
+  margin-bottom: 24px;
+  will-change: transform;
+}
+
+.spinning-logo {
+  animation: logo-spin-glowing 25s linear infinite;
+}
+
+@keyframes logo-spin-glowing {
+  0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
+  50% { transform: rotate(180deg) scale(1.05); filter: drop-shadow(0 0 25px rgba(255, 69, 0, 0.6)); }
+  100% { transform: rotate(360deg) scale(1); filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); }
+}
+
+.greeting-text {
+  background: rgba(9, 8, 12, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  padding: 32px 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  width: 100%;
+}
+
+.radhe-radhe-title {
+  font-family: 'Yatra One', cursive;
+  font-size: 5.2rem;
+  background: linear-gradient(135deg, #ffd700 0%, #ff4500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: -5px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+}
+
+.radhe-radhe-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  letter-spacing: 6px;
+  color: var(--color-secondary);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.spiritual-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.spiritual-divider::before, .spiritual-divider::after {
+  content: '';
+  height: 1px;
+  flex-grow: 1;
+  background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+}
+
+.spiritual-divider span {
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  text-shadow: 0 0 5px var(--color-primary);
+}
+
+.landing-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #fff, var(--color-secondary), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-description {
+  font-size: 0.95rem;
+  color: var(--color-text-sub);
+  line-height: 1.6;
+}
+
+.landing-action-container {
+  margin-top: 32px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing-loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.custom-glowing-spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(212, 175, 55, 0.1);
+  border-top-color: var(--color-secondary);
+  border-bottom-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1.2s linear infinite;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.loading-status-text {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.loading-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.loading-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+.enter-temple-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50px;
+  padding: 18px 36px;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(255, 69, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: enter-btn-glowing 2s infinite;
+}
+
+.enter-temple-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(255, 69, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, var(--color-accent), #ffb703);
+  border-color: rgba(212, 175, 55, 0.6);
+}
+
+@keyframes enter-btn-glowing {
+  0% { box-shadow: 0 0 25px rgba(255, 69, 0, 0.4); }
+  50% { box-shadow: 0 0 35px rgba(255, 69, 0, 0.7), 0 0 15px rgba(212, 175, 55, 0.3); }
+  100% { box-shadow: 0 0 25px rgba(255, 69, 0, 0.4); }
+}
+
+.landing-footer {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+}
+
+.landing-footer p {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* --- DECORATIVE ELEMENTS FOR MAIN SITE --- */
+
+/* Kumbha Border Motifs */
+.kumbha-border {
+  width: 100%;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='%23d4af37' fill-opacity='0.15'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  pointer-events: none;
+}
+
+.kumbha-divider-saffron {
+  width: 100%;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 12 L12 0 L24 12 Z' fill='%23ff4500' fill-opacity='0.15'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  margin: 16px 0;
+  pointer-events: none;
+}
+
+/* Main Site Watermark Background */
+.watermark-container {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  filter: blur(0.5px);
+}
+
+.watermark-container svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Header Spinning Icons */
+.neelachakra-header-icon {
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+  animation: slow-spin 25s linear infinite;
+}
+
+.neelachakra-header-icon.right {
+  animation-direction: reverse;
+}
+
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Styling adjustments for glass cards */
+.glass-card {
+  position: relative;
+  background-image: linear-gradient(180deg, rgba(22, 18, 25, 0.75) 0%, rgba(14, 11, 16, 0.8) 100%);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 10%, var(--color-secondary) 50%, transparent 90%);
+  opacity: 0.3;
+}
+
+/* Make sure active elements stand out nicely */
+.selector-btn.active {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+  color: #fff !important;
+}
+
+.ar-cta-button {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Additional Responsive optimizations */
+@media (max-width: 768px) {
+  .radhe-radhe-title {
+    font-size: 3.8rem;
+  }
+  .greeting-text {
+    padding: 24px;
+  }
+  .landing-title {
+    font-size: 1.3rem;
+  }
+  .enter-temple-btn {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+}
